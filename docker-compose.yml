@@ -37,6 +37,27 @@ services:
     networks:
       - esnet
 
+  filebeat:
+    depends_on:
+      - elasticsearch
+    image: docker.elastic.co/beats/filebeat:6.2.0
+    command: filebeat -e -E output.elasticsearch.username=elastic -E output.elasticsearch.password=elastic123 -strict.perms=false
+    container_name: filebeat
+    volumes:
+      - /tmp/logs/cyclops/:/var/log/cyclops/
+    networks:
+      - esnet
+
+  web:
+    image: some-content-nginx
+    container_name: some-nginx
+    ports:
+     - "8080:80"
+    environment:
+     - NGINX_PORT=80
+    networks:
+      - esnet
+
 volumes:
   esdata1:
     driver: local
