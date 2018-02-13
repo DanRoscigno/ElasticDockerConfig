@@ -53,11 +53,12 @@ data:
         certificate_authorities: ["/etc/certificate/ece-demo-server.pem"]
     
 ---
-# Lines 60 - 142 define a DaemonSet.  A DaemonSet makes sure that each Node runs a copy of this Pod.  The three 
+# Lines 63 - 145 define a DaemonSet.  A DaemonSet makes sure that each Node runs a copy of this Pod.  The three 
 # examples in the docs are 1) Storage daemon like ceph, 2) Logging daemon like Logstash, and 3) Monitoring daemon 
-# like collectd. https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
-# 
-#
+# like collectd. There are three Nodes in our cluster, and during the demo you will see that there are three Pods 
+# returned by kubectl get pods --namespace=kube-system.  If you look at the configuration below you will see the 
+# init command (-c /etc/filebeat.yml -e), resource limits, mount points, and volumes.  Docs are at:
+# https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
 
 apiVersion: extensions/v1beta1
 kind: DaemonSet
@@ -142,6 +143,11 @@ spec:
           defaultMode: 0400
           name: certificate
 ---
+
+# Lines 151 - 162 define a ClusterRoleBinding 
+#
+#
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -155,6 +161,11 @@ roleRef:
   name: filebeat-dynamic
   apiGroup: rbac.authorization.k8s.io
 ---
+
+# Lines 169 - 184 give read access (get, watch, list) at the Cluster level (because this is a Cluter Role rather 
+# than a plain Role or a roll with butter.
+#
+
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -171,6 +182,11 @@ rules:
   - watch
   - list
 ---
+
+# Lines 190 - 196 define a service account named filebeat-dynamic that runs the processes in the filebeat Pods within
+# the kube-system namespace.  If we did not define a service account, then the processes would be owned by a user 
+# named 'default'
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
