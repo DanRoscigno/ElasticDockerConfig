@@ -1,3 +1,8 @@
+# Lines 6 - 53 are a Kubernetes ConfigMap (allows us to use the standard Filebeat Docker image without 
+# modification and provide our own config file into it).  If you look at line 14 you will see the filebeat.yml
+# being created.  It matches the file described in the slides in the demo.  Later on in this file you will see 
+# the file get mounted inside the running container.
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -48,6 +53,12 @@ data:
         certificate_authorities: ["/etc/certificate/ece-demo-server.pem"]
     
 ---
+# Lines 60 - 142 define a DaemonSet.  A DaemonSet makes sure that each Node runs a copy of this Pod.  The three 
+# examples in the docs are 1) Storage daemon like ceph, 2) Logging daemon like Logstash, and 3) Monitoring daemon 
+# like collectd. https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
+# 
+#
+
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
