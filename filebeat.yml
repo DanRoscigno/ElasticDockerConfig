@@ -57,7 +57,8 @@ data:
 # examples in the docs are 1) Storage daemon like ceph, 2) Logging daemon like Logstash, and 3) Monitoring daemon 
 # like collectd. There are three Nodes in our cluster, and during the demo you will see that there are three Pods 
 # returned by kubectl get pods --namespace=kube-system.  If you look at the configuration below you will see the 
-# init command (-c /etc/filebeat.yml -e), resource limits, mount points, and volumes.  Docs are at:
+# init command (-c /etc/filebeat.yml -e), resource limits, mount points, volumes, and the user (filebeat-dynamic)
+# running the Pod processes (at the end of the file we create the user).  Docs are at:
 # https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
 
 apiVersion: extensions/v1beta1
@@ -144,9 +145,8 @@ spec:
           name: certificate
 ---
 
-# Lines 151 - 162 define a ClusterRoleBinding 
-#
-#
+# Lines 151 - 162 define a ClusterRoleBinding.  In this case the ClusterRole is defined on lines 169 - 184 below, 
+# and the user is the ServiceAccount named filebeat-dynamic defined at the end of the file.
 
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -163,8 +163,8 @@ roleRef:
 ---
 
 # Lines 169 - 184 give read access (get, watch, list) at the Cluster level (because this is a Cluter Role rather 
-# than a plain Role or a roll with butter.
-#
+# than a plain Role or a roll with butter. 'Watch' allows users with this role to monitor for changes (like a new pod
+# coming up)
 
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -183,8 +183,8 @@ rules:
   - list
 ---
 
-# Lines 190 - 196 define a service account named filebeat-dynamic that runs the processes in the filebeat Pods within
-# the kube-system namespace.  If we did not define a service account, then the processes would be owned by a user 
+# Lines 190 - 196 define a service account named filebeat-dynamic that will be allowed to run the processes in the 
+# filebeat Pods within the kube-system namespace.  If we did not define a service account, then the processes would be owned by a user 
 # named 'default'
 
 apiVersion: v1
