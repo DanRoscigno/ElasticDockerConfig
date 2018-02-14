@@ -1,5 +1,5 @@
 # Lines 6 - 53 are a Kubernetes ConfigMap (allows us to use the standard Filebeat Docker image without 
-# modification and provide our own config file into it).  If you look at line 14 you will see the filebeat.yml
+# modification and provide our own config file into it).  If you look at line 16 you will see the filebeat.yml
 # being created.  It matches the file described in the slides in the demo.  Later on in this file you will see 
 # the file get mounted inside the running container.
 
