@@ -163,8 +163,8 @@ roleRef:
 ---
 
 # Lines 169 - 184 give read access (get, watch, list) at the Cluster level (because this is a Cluter Role rather 
-# than a plain Role or a roll with butter. 'Watch' allows users with this role to monitor for changes (like a new pod
-# coming up)
+# than a plain Role or a roll with butter. 'Watch' allows users with this role to monitor for changes (like a 
+# new pod coming up)
 
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -184,8 +184,8 @@ rules:
 ---
 
 # Lines 190 - 196 define a service account named filebeat-dynamic that will be allowed to run the processes in the 
-# filebeat Pods within the kube-system namespace.  If we did not define a service account, then the processes would be owned by a user 
-# named 'default'
+# filebeat Pods within the kube-system namespace.  If we did not define a service account, then the processes 
+# would be owned by a user named 'default'
 
 apiVersion: v1
 kind: ServiceAccount
